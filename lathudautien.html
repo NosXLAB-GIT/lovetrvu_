@@ -1,184 +1,208 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>💌 Gửi Trang</title>
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@500&display=swap" rel="stylesheet">
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box;}
-    html,body{
-      height:100%;
-      overflow:hidden;
-      background:linear-gradient(135deg,#ffe0f0,#fff0f5,#fff);
-      font-family:'Quicksand',sans-serif;
-      color:#8b1e48;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      flex-direction:column;
-      text-align:center;
-      position:relative;
-    }
-
-    h1{
-      font-family:'Pacifico',cursive;
-      font-size:40px;
-      color:#ff4b91;
-      text-shadow:0 0 5px #fff;
-      margin-bottom:15px;
-      animation:fadeIn 1s ease;
-    }
-
-    .floating span{
-      position:absolute;
-      font-size:22px;
-      opacity:.7;
-      animation:float 8s linear infinite;
-    }
-    @keyframes float{
-      0%{transform:translateY(100vh) scale(1);opacity:1;}
-      100%{transform:translateY(-10vh) scale(0.5);opacity:0;}
-    }
-
-    .box{
-      width:90%;
-      max-width:520px;
-      background:rgba(255,240,245,.9);
-      border-radius:25px;
-      box-shadow:0 10px 40px rgba(0,0,0,.15);
-      padding:35px 25px;
-      display:none;
-      animation:fadeIn 1.2s ease;
-      position:relative;
-    }
-    .box.show{display:block;}
-
-    .box p{
-      font-size:18px;
-      line-height:1.7;
-      color:#6a1a35;
-      margin-bottom:20px;
-      animation:fadeIn 1.5s ease;
-    }
-
-    footer{
-      font-size:14px;
-      margin-top:15px;
-      color:#a05c7c;
-    }
-
-    .btn{
-      display:inline-block;
-      margin-top:20px;
-      background:#ff6fa3;
-      color:#fff;
-      padding:12px 26px;
-      border-radius:25px;
-      text-decoration:none;
-      font-size:17px;
-      box-shadow:0 3px 10px rgba(0,0,0,.2);
-      transition:.3s;
-    }
-    .btn:hover{background:#ff4b91;transform:scale(1.07);}
-
-    #openBox{
-      text-align:center;
-      animation:fadeIn 1.5s ease;
-    }
-
-    #music{
-      position:fixed;
-      bottom:25px;right:25px;
-      background:rgba(255,255,255,.7);
-      width:45px;height:45px;
-      border-radius:50%;
-      display:flex;align-items:center;justify-content:center;
-      font-size:22px;
-      color:#c0396b;
-      cursor:pointer;
-      box-shadow:0 2px 10px rgba(0,0,0,.2);
-      transition:.3s;
-      display:none;
-    }
-    #music.active i{animation:spin 3s linear infinite;}
-    #music:hover{background:rgba(255,255,255,.9);transform:scale(1.1);}
-    @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💌 Bạn có một lá thư</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@500&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    background:linear-gradient(135deg,#ffe6ef,#fff);
+    font-family:'Quicksand',sans-serif;
+    display:flex;justify-content:center;align-items:center;
+    height:100vh;overflow:hidden;color:#8e3b60;
+  }
+  .envelope{
+    text-align:center;
+    background:#fff0f6;
+    padding:35px 45px;
+    border-radius:20px;
+    box-shadow:0 8px 25px rgba(0,0,0,.2);
+    animation:fadeIn 1s ease;
+  }
+  h1{
+    font-family:'Pacifico',cursive;
+    font-size:38px;
+    color:#ff4b91;
+    margin-bottom:15px;
+  }
+  p.sub{
+    font-size:17px;
+    color:#6a2d50;
+    margin-bottom:20px;
+  }
+  button{
+    background:#ff6fa3;
+    border:none;
+    color:#fff;
+    padding:12px 26px;
+    font-size:18px;
+    border-radius:25px;
+    cursor:pointer;
+    transition:.3s;
+    box-shadow:0 3px 10px rgba(0,0,0,.2);
+  }
+  button:hover{background:#ff4b91;transform:scale(1.05);}
+  .letter{
+    display:none;
+    background:#fffafc;
+    border-radius:20px;
+    box-shadow:0 8px 25px rgba(0,0,0,.2);
+    width:90%;max-width:600px;
+    padding:35px;
+    line-height:1.8;
+    position:relative;
+    animation:fadeIn 1s ease;
+  }
+  .letter h2{
+    font-family:'Pacifico',cursive;
+    font-size:32px;
+    color:#ff4b91;
+    text-align:center;
+    margin-bottom:15px;
+  }
+  .right{
+    text-align:right;
+    font-style:italic;
+    color:#6a2d50;
+    margin-bottom:15px;
+  }
+  .reply{
+    display:block;
+    background:#ff6fa3;
+    color:white;
+    border:none;
+    border-radius:25px;
+    padding:12px 24px;
+    margin:25px auto 0;
+    cursor:pointer;
+    font-size:17px;
+    transition:.3s;
+    text-decoration:none;
+    box-shadow:0 3px 10px rgba(0,0,0,.2);
+  }
+  .reply:hover{background:#ff4b91;transform:scale(1.07);}
+  footer{
+    text-align:center;
+    margin-top:15px;
+    font-size:14px;
+    color:#b16886;
+  }
+  @keyframes fadeIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+  .floating span{
+    position:absolute;font-size:20px;opacity:.7;
+    animation:float 8s linear infinite;
+  }
+  @keyframes float{
+    0%{transform:translateY(100vh) scale(1);opacity:1}
+    100%{transform:translateY(-10vh) scale(0.5);opacity:0}
+  }
+  .heart{
+    position:absolute;
+    font-size:18px;
+    color:#ff4b91;
+    animation:burst 2.5s ease-out forwards;
+    pointer-events:none;
+  }
+  @keyframes burst{
+    0%{opacity:1;transform:translate(0,0) scale(1);}
+    100%{opacity:0;transform:translate(var(--x),var(--y)) scale(0.4);}
+  }
+  .love-text{
+    display:inline-block;
+    font-weight:600;
+    font-size:18px;
+    color:#ff4b91;
+    position:relative;
+  }
+</style>
 </head>
 <body>
 
-  <!-- Icon bay -->
-  <div class="floating">
-    <span style="left:10%;animation-delay:0s;">💖</span>
-    <span style="left:30%;animation-delay:2s;">💞</span>
-    <span style="left:50%;animation-delay:4s;">🌸</span>
-    <span style="left:70%;animation-delay:1s;">💗</span>
-    <span style="left:85%;animation-delay:3s;">✨</span>
-  </div>
+<div class="floating">
+  <span style="left:10%;animation-delay:0s;">💖</span>
+  <span style="left:25%;animation-delay:2s;">💕</span>
+  <span style="left:45%;animation-delay:3s;">🌸</span>
+  <span style="left:65%;animation-delay:4s;">💞</span>
+  <span style="left:85%;animation-delay:6s;">✨</span>
+</div>
 
-  <!-- Mở thư -->
-  <div id="openBox">
-    <h1>💌 Bạn có một lá thư</h1>
-    <p>Từ H gửi đến cậu — Trang.</p>
-    <a href="#" class="btn" onclick="openLetter()">Mở thư 💌</a>
-  </div>
+<div class="envelope" id="intro">
+  <h1>💌 Bạn có một lá thư</h1>
+  <p class="sub">Từ Bờ gửi đến Trang.</p>
+  <button onclick="openLetter()">Mở thư 💌</button>
+</div>
 
-  <!-- Nội dung -->
-  <div class="box" id="letterBox">
-    <h1>💌 Gửi Trang</h1>
-    <p>
-      Tớ biết, giờ mọi lời giải thích đều dễ trở thành vô nghĩa.<br>
-      Nhưng tớ không viết để biện minh.<br>
-      Tớ viết vì không muốn những gì giữa hai đứa chỉ còn lại trong những tin nhắn dang dở.<br><br>
+<div class="letter" id="letter">
+  <h2>💖 Lá thư đầu tiên dành cho cậu</h2>
+  <p class="right">Hoa Lư, ngày 5 tháng 10 năm 2025</p>
+  <p>Gửi Trang,</p>
+  <p>
+    Tớ biết đêm qua mọi thứ đã khiến cậu mệt, và có lẽ tớ cũng không đủ khéo để làm cậu yên lòng.
+    Nhưng tớ đã thật sự suy nghĩ rất kĩ — không phải vì ai nhắc, mà vì chính tớ muốn rõ lòng mình.
+  </p>
+  <p>
+    Cậu nói “lần này xin b hãy suy nghĩ thật kĩ”.<br>
+    Tớ đã làm vậy.<br>
+    Và câu trả lời của tớ... vẫn như trước: tớ thật lòng.
+  </p>
+  <p>
+    Không phải cảm xúc nhất thời, càng không phải cố chấp.
+    Chỉ là giữa hàng trăm người, tớ vẫn chọn cách để ý cậu,
+    vẫn muốn làm điều gì đó cho cậu — dù chỉ là một lời xin lỗi nhỏ thôi.
+  </p>
+  <p>
+    Tớ không biết mọi thứ sau này sẽ ra sao,
+    nhưng nếu cậu hỏi lại một lần nữa rằng “tớ có chắc không”,
+    thì lần này — tớ sẽ không ngập ngừng nữa.
+  </p>
+  <p class="love-text" id="love">I love u.</p><br>
+  <p>— HBach.</p>
+  <button class="reply" onclick="window.location.href='sms:+84366615566'">💭 Phản hồi lại tớ &lt;3</button>
+  <footer>💫 Powered by NosXLab</footer>
+</div>
 
-      Có thể trong mắt cậu, tình cảm của tớ chưa đủ lớn, chưa đủ rõ.<br>
-      Nhưng cậu tin không — mọi điều tớ từng nói, từng làm, đều thật lòng cả.<br>
-      Chỉ là tớ chưa biết cách thể hiện cho đúng thôi.<br><br>
-
-      Tớ không hứa gì nhiều, chỉ hứa rằng nếu còn cơ hội,<br>
-      mọi điều tớ làm sau này sẽ tử tế hơn — vì cậu, và vì chính mình.<br><br>
-
-      Dù kết quả ra sao, tớ vẫn cảm ơn cậu.<br>
-      Vì nhờ cậu, tớ học được cách yêu một người — không chỉ bằng cảm xúc,<br>
-      mà bằng sự chân thành và trách nhiệm.<br><br>
-
-      Chỉ cần cậu đừng quên rằng, đã từng có một người thật lòng như vậy.<br><br>
-      — H 💫
-    </p>
-
-    <a href="sms:+84366615566" class="btn">💭 Phản hồi lại</a>
-
-    <footer>Powered by NosXLab 💫</footer>
-  </div>
-
-  <div id="music"><i>🎵</i></div>
-  <audio id="audio" loop>
-    <source src="https://files.catbox.moe/6itx85.MP3" type="audio/mpeg">
-  </audio>
+<audio id="music" loop>
+  <source src="https://files.catbox.moe/6itx85.MP3" type="audio/mpeg">
+</audio>
 
 <script>
-const openBox=document.getElementById('openBox');
-const letterBox=document.getElementById('letterBox');
-const audio=document.getElementById('audio');
-const musicBtn=document.getElementById('music');
-audio.volume=0.7;
-
 function openLetter(){
-  openBox.style.display='none';
-  letterBox.classList.add('show');
-  musicBtn.style.display='flex';
-  audio.play().then(()=>musicBtn.classList.add('active'))
-  .catch(()=>console.log('Autoplay bị chặn, click để bật nhạc.'));
+  document.getElementById('intro').style.display='none';
+  const letter=document.getElementById('letter');
+  letter.style.display='block';
+  const music=document.getElementById('music');
+  music.play().catch(()=>{console.warn('Autoplay bị chặn');});
+  // bắn tim liên tục mỗi 3 giây
+  setTimeout(()=>{
+    createHearts();
+    setInterval(createHearts, 3000);
+  },1500);
 }
 
-musicBtn.addEventListener('click',()=>{
-  if(audio.paused){
-    audio.play();musicBtn.classList.add('active');
-  }else{
-    audio.pause();musicBtn.classList.remove('active');
+function createHearts(){
+  const love=document.getElementById('love');
+  const rect=love.getBoundingClientRect();
+  const centerX=rect.left+rect.width/2;
+  const centerY=rect.top+rect.height/2;
+  for(let i=0;i<25;i++){
+    const heart=document.createElement('div');
+    heart.classList.add('heart');
+    heart.textContent='💖';
+    heart.style.left=centerX+'px';
+    heart.style.top=centerY+'px';
+    const angle=Math.random()*2*Math.PI;
+    const distance=100+Math.random()*150;
+    const x=Math.cos(angle)*distance;
+    const y=Math.sin(angle)*distance*-1;
+    heart.style.setProperty('--x',`${x}px`);
+    heart.style.setProperty('--y',`${y}px`);
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),2500);
   }
-});
+}
 </script>
+
 </body>
 </html>
