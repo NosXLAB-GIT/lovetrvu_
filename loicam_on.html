@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💖 Lá thư</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --hong:#ff5f9e;
+    --chu:#5a1f34;
+}
+
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    color:var(--chu);
+    background:linear-gradient(120deg,#ffe6ec,#ffd1dc,#fff0f5);
+    overflow:hidden;
+}
+
+/* KHUNG CHUNG */
+.khung{
+    width:420px;
+    max-width:92%;
+    padding:36px 32px;
+    border-radius:28px;
+    background:rgba(255,255,255,.35);
+    backdrop-filter:blur(22px);
+    border:1px solid rgba(255,255,255,.5);
+    box-shadow:0 20px 45px rgba(0,0,0,.12);
+    animation:vao .8s ease;
+    position:relative;
+    z-index:2;
+}
+@keyframes vao{
+    from{opacity:0;transform:translateY(40px) scale(.96)}
+    to{opacity:1;transform:none}
+}
+
+h1{
+    text-align:center;
+    font-family:'Playfair Display', serif;
+    color:var(--hong);
+    margin-bottom:12px;
+}
+
+.mo{
+    text-align:center;
+    font-size:14px;
+    opacity:.75;
+    margin-bottom:16px;
+}
+
+input{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:16px;
+    font-size:15px;
+    text-align:center;
+    background:rgba(255,255,255,.9);
+    margin-bottom:14px;
+}
+
+.nhom-ngay{
+    display:flex;
+    gap:10px;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:18px;
+    background:linear-gradient(135deg,#ff7e5f,#feb47b);
+    color:#fff;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.loi{
+    margin-top:12px;
+    text-align:center;
+    color:#c62828;
+    display:none;
+}
+
+/* THƯ – CHO PHÉP CUỘN */
+.khung.thu{
+    max-height:85vh;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    padding-bottom:28px;
+}
+.khung.thu::-webkit-scrollbar{width:0}
+
+.thu p{
+    font-size:15.5px;
+    line-height:1.95;
+    margin:0 0 18px;
+}
+
+#dem-tg{
+    text-align:center;
+    margin-bottom:22px;
+    font-size:14px;
+}
+#dem-tg b{color:var(--hong)}
+
+.chuky{
+    text-align:right;
+    margin-top:24px;
+    font-style:italic;
+    opacity:.85;
+}
+
+/* FOOTER */
+.footer{
+    margin-top:28px;
+    text-align:center;
+    font-size:12px;
+    opacity:.6;
+}
+
+/* TIM */
+.heart{
+    position:fixed;
+    top:-20px;
+    font-size:16px;
+    pointer-events:none;
+    opacity:.7;
+    animation:roi linear forwards;
+}
+@keyframes roi{
+    to{transform:translateY(110vh);opacity:0}
+}
+
+.ban-tim{
+    position:fixed;
+    left:50%;
+    top:50%;
+    font-size:22px;
+    pointer-events:none;
+    animation:ban 1.6s ease-out forwards;
+}
+@keyframes ban{
+    from{transform:scale(.5);opacity:1}
+    to{
+        transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y)))
+        scale(1.4) rotate(360deg);
+        opacity:0;
+    }
+}
+
+/* NHẠC */
+#nut-nhac{
+    position:fixed;
+    bottom:18px;
+    right:18px;
+    width:46px;
+    height:46px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(255,255,255,.4);
+    backdrop-filter:blur(12px);
+    box-shadow:0 8px 20px rgba(0,0,0,.2);
+    cursor:pointer;
+    font-size:18px;
+    z-index:5;
+}
+#nut-nhac.play{
+    animation:xoay 2.5s linear infinite;
+}
+@keyframes xoay{to{transform:rotate(360deg)}}
+</style>
+</head>
+
+<body>
+
+<!-- STEP 1 -->
+<div class="khung" id="step1">
+    <h1>🔐 Mật khẩu</h1>
+    <div class="mo">Chỉ người đặc biệt mới vào được</div>
+    <input type="password" id="mk" placeholder="Nhập mật khẩu">
+    <button onclick="checkMK()">Tiếp tục</button>
+    <div class="loi" id="loi1">Sai mật khẩu rồi…</div>
+</div>
+
+<!-- STEP 2 -->
+<div class="khung" id="step2" style="display:none">
+    <h1>🎂 Ngày sinh</h1>
+    <div class="mo">Nhập ngày tháng năm sinh</div>
+    <div class="nhom-ngay">
+        <input type="number" id="d0" placeholder="DD">
+        <input type="number" id="m0" placeholder="MM">
+        <input type="number" id="y0" placeholder="YYYY">
+    </div>
+    <button onclick="checkDate()">Mở thư</button>
+    <div class="loi" id="loi2">Không đúng rồi…</div>
+</div>
+
+<!-- THƯ -->
+<div class="khung thu" id="thu" style="display:none">
+    <h1>Tâm thư</h1>
+
+    <div id="dem-tg">
+        ⏳ Look!!!<br>
+        <b>
+            <span id="d"></span> ngày ·
+            <span id="h"></span> giờ ·
+            <span id="m"></span> phút ·
+            <span id="s"></span> giây
+        </b>
+    </div>
+
+    <p>
+        Cảm ơn Trang,
+        vì trong suốt khoảng thời gian qua
+        đã xuất hiện trong cuộc đời tớ.
+    </p>
+
+    <p>
+        Chúng ta đã trải qua rất nhiều chuyện.
+        Có những lúc vui vẻ,
+        cũng có những lúc buồn chán, lo âu,
+        những khoảng suy ngẫm kéo dài hơn mình từng nghĩ.
+        Những cảm xúc năm nào ban đầu cứ tưởng là thoáng qua,
+        vậy mà theo thời gian,
+        lại dần trở thành điều gì đó chân thật và rõ ràng hơn.
+    </p>
+
+    <p>
+        Có những kỷ niệm khiến tớ mỉm cười khi nhớ lại,
+        cũng có những kỷ niệm không vui lắm,
+        nhưng tất cả đều nằm trong những ngày tháng
+        mà tớ chưa từng xem là vô nghĩa.
+    </p>
+
+    <p>
+        Có thể tớ không giỏi nói những lời lớn lao,<br>
+        nhưng tớ nhớ từng chi tiết nhỏ,<br>
+        những lần trò chuyện,<br>
+        những lúc vui đùa cùng nhau,<br>
+        những khoảnh khắc rất bình thường
+        mà chỉ khi có Trang ở bên,
+        tớ mới nhận ra được.
+    </p>
+
+    <p>
+        Nếu cậu đọc được đến những dòng này,
+        thì tớ chỉ muốn nói rằng
+        tớ thật sự cảm ơn cậu rất nhiều.
+    </p>
+
+    <p>
+        Cảm ơn cậu,<br>
+        vì đã xuất hiện đúng lúc,<br>
+        và ở lại đây,<br>
+        để những cảm xúc năm ấy
+        không chỉ dừng lại ở thoáng qua,
+        mà trở thành một phần trong cuộc đời tớ
+        mà tớ luôn trân trọng.
+    </p>
+
+    <p>
+        Và nếu có thể,
+        tớ vẫn mong
+        những ngày tháng phía trước
+        sẽ còn có Trang bên cạnh thật lâu...
+   
+    </p>
+
+    <div class="chuky">— HBach</div>
+
+    <div class="footer">
+        <span id="namHienTai"></span> © NosXLAB
+    </div>
+</div>
+
+<!-- NHẠC -->
+<div id="nut-nhac" onclick="toggleMusic()">🎵</div>
+<audio id="music" loop>
+    <source src="https://files.catbox.moe/j2nz9x.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+/* FOOTER YEAR */
+document.getElementById("namHienTai").innerText = new Date().getFullYear();
+
+/* STEP */
+function checkMK(){
+    if(mk.value.trim().toLowerCase()==="thutrangxgai"){
+        step1.style.display="none";
+        step2.style.display="block";
+    }else loi1.style.display="block";
+}
+function checkDate(){
+    if(+d0.value===5 && +m0.value===3 && +y0.value===2011){
+        step2.style.display="none";
+        thu.style.display="block";
+        startCounter();
+        shootHearts();
+        toggleMusic();
+    }else loi2.style.display="block";
+}
+
+/* TIME */
+function startCounter(){
+    setInterval(()=>{
+        let start=new Date(2023,8,10,17,0,0);
+        let now=new Date();
+        let diff=Math.floor((now-start)/1000);
+        d.innerText=Math.floor(diff/86400);
+        diff%=86400;
+        h.innerText=Math.floor(diff/3600);
+        diff%=3600;
+        m.innerText=Math.floor(diff/60);
+        s.innerText=diff%60;
+    },1000);
+}
+
+/* HEARTS */
+setInterval(()=>{
+    let t=document.createElement("div");
+    t.className="heart";
+    t.innerText="💗";
+    t.style.left=Math.random()*100+"vw";
+    t.style.animationDuration=6+Math.random()*4+"s";
+    document.body.appendChild(t);
+    setTimeout(()=>t.remove(),10000);
+},700);
+
+function shootHearts(){
+    for(let i=0;i<18;i++){
+        setTimeout(()=>{
+            let t=document.createElement("div");
+            t.className="ban-tim";
+            t.innerText="💖";
+            t.style.setProperty("--x",(Math.random()*300-150)+"px");
+            t.style.setProperty("--y",(Math.random()*-300)+"px");
+            document.body.appendChild(t);
+            setTimeout(()=>t.remove(),2000);
+        },i*80);
+    }
+}
+
+/* MUSIC */
+const music=document.getElementById("music");
+const btn=document.getElementById("nut-nhac");
+let on=false;
+music.volume=.35;
+function toggleMusic(){
+    if(on){
+        music.pause();
+        btn.classList.remove("play");
+        on=false;
+    }else{
+        music.play();
+        btn.classList.add("play");
+        on=true;
+    }
+}
+</script>
+
+</body>
+</html>
