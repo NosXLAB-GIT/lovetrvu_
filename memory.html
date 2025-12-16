@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Love Thu Trang</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+html,body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#060006;
+  font-family:"Segoe UI",sans-serif;
+}
+
+/* THREE CANVAS */
+canvas{
+  position:fixed;
+  inset:0;
+  width:100vw;
+  height:100vh;
+  z-index:1;
+}
+
+/* FALL LAYER (TEXT + EMOJI) */
+#fall-layer{
+  position:fixed;
+  inset:0;
+  z-index:5;
+  pointer-events:none;
+  overflow:hidden;
+}
+
+/* FALL ITEM */
+.fall{
+  position:absolute;
+  top:-10%;
+  white-space:nowrap;
+  animation:fall linear infinite;
+  opacity:.9;
+}
+
+.text{
+  color:rgba(255,190,210,0.95);
+  text-shadow:0 0 14px rgba(255,120,160,0.6);
+  letter-spacing:.18em;
+}
+
+@keyframes fall{
+  from{
+    transform:translateY(-10vh);
+    opacity:0;
+  }
+  to{
+    transform:translateY(110vh);
+    opacity:1;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="c"></canvas>
+<div id="fall-layer"></div>
+
+<script type="module">
+import * as THREE from "https://cdn.skypack.dev/three@0.135.0";
+import { GLTFLoader } from "https://cdn.skypack.dev/three@0.135.0/examples/jsm/loaders/GLTFLoader";
+import { gsap } from "https://cdn.skypack.dev/gsap@3.8.0";
+
+/* ================= THREE SCENE ================= */
+const canvas=document.getElementById("c");
+const scene=new THREE.Scene();
+scene.background=new THREE.Color("#0a0206");
+
+const camera=new THREE.PerspectiveCamera(70,innerWidth/innerHeight,0.1,100);
+camera.position.z=4.5;
+
+const renderer=new THREE.WebGLRenderer({
+  canvas,antialias:true,powerPreference:"low-power"
+});
+renderer.setSize(innerWidth,innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio,1.4));
+
+window.addEventListener("resize",()=>{
+  camera.aspect=innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth,innerHeight);
+});
+
+scene.add(new THREE.AmbientLight(0xffffff,1));
+
+/* ================= 3D HEART ================= */
+let heartModel;
+new GLTFLoader().load(
+  "https://assets.codepen.io/74321/heart.glb",
+  g=>{
+    heartModel=g.scene.children[0];
+    heartModel.scale.set(0.01,0.01,0.01);
+    heartModel.material=new THREE.MeshMatcapMaterial({
+      matcap:new THREE.TextureLoader().load(
+        "https://assets.codepen.io/74321/3.png"
+      )
+    });
+    scene.add(heartModel);
+
+    gsap.to(heartModel.scale,{
+      x:.35,y:.35,z:.35,
+      duration:1.5,
+      ease:"elastic.out(1,0.5)"
+    });
+
+    gsap.to(heartModel.scale,{
+      x:.38,y:.38,z:.38,
+      duration:2,
+      repeat:-1,
+      yoyo:true,
+      ease:"sine.inOut"
+    });
+  }
+);
+
+/* ================= WHITE HEARTS (ÍT LẠI) ================= */
+const heartTex=new THREE.TextureLoader().load(
+  "https://assets.codepen.io/74321/heart.png"
+);
+
+// GIẢM MẠNH
+const count=innerWidth<600?60:120;
+const geo=new THREE.BufferGeometry();
+const pos=new Float32Array(count*3);
+const speed=[];
+
+for(let i=0;i<count;i++){
+  pos[i*3]=(Math.random()-0.5)*8;
+  pos[i*3+1]=Math.random()*8;
+  pos[i*3+2]=(Math.random()-0.5)*2;
+  speed[i]=0.006+Math.random()*0.01;
+}
+geo.setAttribute("position",new THREE.BufferAttribute(pos,3));
+
+const mat=new THREE.PointsMaterial({
+  size:0.18,
+  map:heartTex,
+  transparent:true,
+  depthWrite:false,
+  opacity:0.45 // MỜ ĐI
+});
+
+const fallingHearts=new THREE.Points(geo,mat);
+scene.add(fallingHearts);
+
+/* ================= MUSIC ================= */
+let started=false;
+let sound;
+
+function initMusic(){
+  if(started) return;
+  started=true;
+
+  const listener=new THREE.AudioListener();
+  camera.add(listener);
+  sound=new THREE.Audio(listener);
+
+  new THREE.AudioLoader().load(
+    "https://files.catbox.moe/39ugmx.mp3",
+    b=>{
+      sound.setBuffer(b);
+      sound.setVolume(0.5);
+
+      // Desktop: auto sau 1s
+      setTimeout(()=>{
+        try{ sound.play(); }catch(e){}
+      },1000);
+    }
+  );
+}
+
+// Chuẩn bị sẵn
+initMusic();
+
+// Mobile: chạm là phát
+window.addEventListener("pointerdown",()=>{
+  if(sound && !sound.isPlaying){
+    try{ sound.play(); }catch(e){}
+  }
+},{once:true});
+
+/* ================= FALLING TEXT + EMOJI (NHIỀU) ================= */
+const layer=document.getElementById("fall-layer");
+
+const texts=[
+  "love thu trang",
+  "vũ thu trang",
+  "05 · 03 · 2011"
+];
+
+const emojis=["💕","💖","🌸","💞","✨"];
+
+function spawnFall(){
+  const el=document.createElement("div");
+  el.className="fall";
+
+  if(Math.random()<0.25){
+    // TEXT (ÍT HƠN EMOJI)
+    el.textContent=texts[Math.floor(Math.random()*texts.length)];
+    el.classList.add("text");
+    el.style.fontSize=(14+Math.random()*12)+"px";
+  }else{
+    // EMOJI (NHIỀU)
+    el.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    el.style.fontSize=(16+Math.random()*18)+"px";
+  }
+
+  el.style.left=Math.random()*100+"%";
+  el.style.animationDuration=(7+Math.random()*7)+"s";
+
+  layer.appendChild(el);
+  setTimeout(()=>el.remove(),16000);
+}
+
+// RƠI DÀY
+setInterval(spawnFall,180);
+
+/* ================= LOOP ================= */
+function animate(){
+  if(heartModel) heartModel.rotation.y+=0.003;
+
+  const a=geo.attributes.position.array;
+  for(let i=0;i<count;i++){
+    a[i*3+1]-=speed[i];
+    if(a[i*3+1]<-4){
+      a[i*3+1]=4;
+      a[i*3]=(Math.random()-0.5)*8;
+    }
+  }
+  geo.attributes.position.needsUpdate=true;
+
+  renderer.render(scene,camera);
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
+
+</body>
+</html>
