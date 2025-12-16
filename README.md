@@ -1,36 +1,44 @@
 # 💖 lovetru_
 
-Một project nhỏ bằng **HTML / CSS / JavaScript**,  
-được tạo ra dành riêng cho ThuTrang
+> *Some feelings are too quiet for words — so I let code speak instead.*
+
+Một project nhỏ viết bằng **HTML / CSS / JavaScript**,  
+được tạo ra **chỉ dành cho ThuTrang**.
 
 ---
 
 ## ✨ Giới thiệu
 
-**lovetru_** là tập hợp những trang HTML hiệu ứng trái tim, animation nhẹ,  
-được dùng để gửi cho **người mà mình yêu thương nhất – Trang**.
+**lovetru_** không phải là website.  
+Nó là một tập hợp những trang HTML mang hiệu ứng trái tim, animation nhẹ, chuyển động chậm —  
+đủ để người xem **dừng lại một chút**, và cảm nhận.
+
+Không có quảng cáo.  
+Không có mục đích thương mại.  
+Chỉ có **cảm xúc được gói gọn trong từng dòng code**.
 
 ---
 
 ## 🎯 Mục đích của project
 
-- Dùng những trang web đơn giản để truyền tải cảm xúc
-- Dùng code làm cách thể hiện những điều **khó nói thành lời**
-- Lưu lại một khoảng thời gian, một cảm xúc, một người
-- Lưu lại cảm xúc dành cho **một người đặc biệt**
+- Dùng những trang web **đơn giản nhưng có chiều sâu** để truyền tải cảm xúc  
+- Biến code thành một cách nói thay cho những điều **khó mở lời**  
+- Lưu lại một khoảng thời gian đã từng rất thật  
+- Lưu lại cảm xúc dành cho **một người đặc biệt — Trang**
 
-> Đây không phải sản phẩm thương mại.  
-> Đây là một kỷ niệm.
+> Đây không phải là một sản phẩm.  
+> Đây là một kỷ niệm được viết bằng lập trình.
 
 ---
 
 ## 🛠️ Công nghệ sử dụng
 
-- HTML
-- CSS
-- JavaScript (Canvas, animation)
-- Không dùng thư viện ngoài
-- Mở trực tiếp bằng trình duyệt là chạy
+- **HTML** – cấu trúc, nền tảng  
+- **CSS** – màu sắc, cảm xúc, nhịp điệu  
+- **JavaScript** – chuyển động, nhịp tim, animation  
+- Canvas animation thuần  
+- **Không dùng thư viện ngoài**  
+- Mở trực tiếp bằng trình duyệt là chạy — không cần cài đặt  
 
 ---
 
@@ -39,5 +47,5 @@ Một project nhỏ bằng **HTML / CSS / JavaScript**,
 ```text
 lovetru_/
 │
-├── *.html        # Các trang hiệu ứng trái tim
-├── README.md     # File mô tả project (file này)
+├── *.html        # Các trang hiệu ứng trái tim & cảm xúc
+├── README.md     # File mô tả project
