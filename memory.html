@@ -12,8 +12,45 @@ html,body{
   width:100%;
   height:100%;
   overflow:hidden;
-  background:#060006;
   font-family:"Segoe UI",sans-serif;
+  background:#060006;
+}
+
+/* ===== BACKGROUND EFFECT ===== */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,80,120,.12), transparent 45%),
+    radial-gradient(circle at 70% 70%, rgba(180,80,255,.10), transparent 50%),
+    linear-gradient(180deg,#060006,#0a0208);
+  animation:bgMove 20s linear infinite;
+  z-index:0;
+}
+@keyframes bgMove{
+  from{filter:hue-rotate(0deg)}
+  to{filter:hue-rotate(12deg)}
+}
+
+/* ===== UNLOCK LAYER (FIX MOBILE AUTOPLAY) ===== */
+#unlock{
+  position:fixed;
+  inset:0;
+  z-index:20;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,.35);
+  backdrop-filter:blur(4px);
+  color:#ffd6e6;
+  font-size:14px;
+  letter-spacing:.15em;
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{
+  0%,100%{opacity:.6}
+  50%{opacity:1}
 }
 
 /* THREE CANVAS */
@@ -31,7 +68,6 @@ canvas{
   inset:0;
   z-index:5;
   pointer-events:none;
-  overflow:hidden;
 }
 
 .fall{
@@ -57,7 +93,11 @@ canvas{
 
 <body>
 
-<audio id="bgm" autoplay muted loop playsinline>
+<!-- ===== MOBILE UNLOCK ===== -->
+<div id="unlock">I Love You - ThuTrang</div>
+
+<!-- ===== AUDIO ===== -->
+<audio id="bgm" loop playsinline preload="auto">
   <source src="https://files.catbox.moe/39ugmx.mp3" type="audio/mpeg">
 </audio>
 
@@ -68,6 +108,30 @@ canvas{
 import * as THREE from "https://cdn.skypack.dev/three@0.135.0";
 import { GLTFLoader } from "https://cdn.skypack.dev/three@0.135.0/examples/jsm/loaders/GLTFLoader";
 import { gsap } from "https://cdn.skypack.dev/gsap@3.8.0";
+
+/* ===== MUSIC FIX ALL ===== */
+const bgm=document.getElementById("bgm");
+let volume=0;
+const maxVolume=0.5;
+
+function startMusic(){
+  bgm.volume=0;
+  bgm.play().then(()=>{
+    const fade=setInterval(()=>{
+      volume+=0.02;
+      bgm.volume=Math.min(volume,maxVolume);
+      if(volume>=maxVolume) clearInterval(fade);
+    },60);
+  }).catch(()=>{});
+}
+
+const unlock=document.getElementById("unlock");
+unlock.addEventListener("pointerdown",()=>{
+  unlock.remove();
+  startMusic();
+},{once:true});
+
+/* ===== THREE SCENE ===== */
 const canvas=document.getElementById("c");
 const scene=new THREE.Scene();
 scene.background=new THREE.Color("#0a0206");
@@ -75,9 +139,7 @@ scene.background=new THREE.Color("#0a0206");
 const camera=new THREE.PerspectiveCamera(70,innerWidth/innerHeight,0.1,100);
 camera.position.z=4.5;
 
-const renderer=new THREE.WebGLRenderer({
-  canvas,antialias:true,powerPreference:"low-power"
-});
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
 renderer.setSize(innerWidth,innerHeight);
 renderer.setPixelRatio(Math.min(devicePixelRatio,1.4));
 
@@ -88,6 +150,8 @@ window.addEventListener("resize",()=>{
 });
 
 scene.add(new THREE.AmbientLight(0xffffff,1));
+
+/* ===== HEART ===== */
 let heartModel;
 let baseScale=0.38;
 
@@ -104,20 +168,14 @@ new GLTFLoader().load(
     scene.add(heartModel);
 
     gsap.to(heartModel.scale,{
-      x:.35,y:.35,z:.35,
-      duration:1.5,
-      ease:"elastic.out(1,0.5)"
-    });
-
-    gsap.to(heartModel.scale,{
       x:baseScale,y:baseScale,z:baseScale,
-      duration:2,
-      repeat:-1,
-      yoyo:true,
-      ease:"sine.inOut"
+      duration:1.6,
+      ease:"elastic.out(1,0.5)"
     });
   }
 );
+
+/* ===== FALLING HEARTS ===== */
 const heartTex=new THREE.TextureLoader().load(
   "https://assets.codepen.io/74321/heart.png"
 );
@@ -135,65 +193,30 @@ for(let i=0;i<count;i++){
 }
 geo.setAttribute("position",new THREE.BufferAttribute(pos,3));
 
-const mat=new THREE.PointsMaterial({
-  size:0.18,
-  map:heartTex,
-  transparent:true,
-  depthWrite:false,
-  opacity:0.45
-});
-scene.add(new THREE.Points(geo,mat));
-const bgm=document.getElementById("bgm");
-let targetVolume=0.5;
-let currentVolume=0;
-setTimeout(()=>{
-  bgm.muted=false;
-  bgm.volume=0;
-  bgm.play().catch(()=>{});
-},1200);
+scene.add(new THREE.Points(
+  geo,
+  new THREE.PointsMaterial({
+    size:0.18,
+    map:heartTex,
+    transparent:true,
+    opacity:0.45,
+    depthWrite:false
+  })
+));
 
-function fadeIn(){
-  currentVolume=Math.min(targetVolume,currentVolume+0.005);
-  bgm.volume=currentVolume;
-}
-
-function fadeOut(){
-  currentVolume=Math.max(0.15,currentVolume-0.01);
-  bgm.volume=currentVolume;
-}
-
-["pointerdown","touchstart","keydown","wheel"].forEach(e=>{
-  window.addEventListener(e,()=>{
-    bgm.muted=false;
-    bgm.play().catch(()=>{});
-  },{once:true});
-});
-
-document.addEventListener("visibilitychange",()=>{
-  if(document.hidden) fadeOut();
-});
-
-/* ================= FALLING TEXT + EMOJI ================= */
+/* ===== FALL TEXT ===== */
 const layer=document.getElementById("fall-layer");
-
 const texts=[
-  "love thu trang",
-  "vũ thu trang",
-  "05 · 03 · 2011",
-  "trvu",
-  "I Love You",
-  "I Miss You",
-  "11 · 10 · 2025",
-  "nerver ending",
-  "Now and forever?...",
+  "love thu trang","vũ thu trang","05 · 03 · 2011",
+  "I Love You","I Miss You","Now and forever?...","vũ thu trang",
+  "05 · 03 · 2011","I Love You","I Miss You","trvu","Thu Trang",
+  "luv u"
 ];
-  
-const emojis=["💕","💖","🌸","💞","✨","💘","💘","❤️‍🔥","💞","💝"];
+const emojis=["💕","💖","🌸","💞","✨","💘","❤️‍🔥","💝"];
 
 function spawnFall(){
   const el=document.createElement("div");
   el.className="fall";
-
   if(Math.random()<0.25){
     el.textContent=texts[Math.floor(Math.random()*texts.length)];
     el.classList.add("text");
@@ -202,18 +225,17 @@ function spawnFall(){
     el.textContent=emojis[Math.floor(Math.random()*emojis.length)];
     el.style.fontSize=(16+Math.random()*18)+"px";
   }
-
   el.style.left=Math.random()*100+"%";
   el.style.animationDuration=(7+Math.random()*7)+"s";
   layer.appendChild(el);
   setTimeout(()=>el.remove(),16000);
 }
-
 setInterval(spawnFall,180);
+
+/* ===== LOOP ===== */
 function animate(){
   if(heartModel){
     heartModel.rotation.y+=0.003;
-    fadeIn();
     const pulse=1+Math.sin(performance.now()*0.006)*0.02;
     heartModel.scale.set(
       baseScale*pulse,
