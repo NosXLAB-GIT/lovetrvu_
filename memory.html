@@ -25,7 +25,7 @@ canvas{
   z-index:1;
 }
 
-/* FALL LAYER (TEXT + EMOJI) */
+/* FALL LAYER */
 #fall-layer{
   position:fixed;
   inset:0;
@@ -34,7 +34,6 @@ canvas{
   overflow:hidden;
 }
 
-/* FALL ITEM */
 .fall{
   position:absolute;
   top:-10%;
@@ -50,19 +49,17 @@ canvas{
 }
 
 @keyframes fall{
-  from{
-    transform:translateY(-10vh);
-    opacity:0;
-  }
-  to{
-    transform:translateY(110vh);
-    opacity:1;
-  }
+  from{transform:translateY(-10vh);opacity:0}
+  to{transform:translateY(110vh);opacity:1}
 }
 </style>
 </head>
 
 <body>
+
+<audio id="bgm" autoplay muted loop playsinline>
+  <source src="https://files.catbox.moe/39ugmx.mp3" type="audio/mpeg">
+</audio>
 
 <canvas id="c"></canvas>
 <div id="fall-layer"></div>
@@ -71,8 +68,6 @@ canvas{
 import * as THREE from "https://cdn.skypack.dev/three@0.135.0";
 import { GLTFLoader } from "https://cdn.skypack.dev/three@0.135.0/examples/jsm/loaders/GLTFLoader";
 import { gsap } from "https://cdn.skypack.dev/gsap@3.8.0";
-
-/* ================= THREE SCENE ================= */
 const canvas=document.getElementById("c");
 const scene=new THREE.Scene();
 scene.background=new THREE.Color("#0a0206");
@@ -93,9 +88,9 @@ window.addEventListener("resize",()=>{
 });
 
 scene.add(new THREE.AmbientLight(0xffffff,1));
-
-/* ================= 3D HEART ================= */
 let heartModel;
+let baseScale=0.38;
+
 new GLTFLoader().load(
   "https://assets.codepen.io/74321/heart.glb",
   g=>{
@@ -115,7 +110,7 @@ new GLTFLoader().load(
     });
 
     gsap.to(heartModel.scale,{
-      x:.38,y:.38,z:.38,
+      x:baseScale,y:baseScale,z:baseScale,
       duration:2,
       repeat:-1,
       yoyo:true,
@@ -123,13 +118,10 @@ new GLTFLoader().load(
     });
   }
 );
-
-/* ================= WHITE HEARTS (ÍT LẠI) ================= */
 const heartTex=new THREE.TextureLoader().load(
   "https://assets.codepen.io/74321/heart.png"
 );
 
-// GIẢM MẠNH
 const count=innerWidth<600?60:120;
 const geo=new THREE.BufferGeometry();
 const pos=new Float32Array(count*3);
@@ -148,87 +140,87 @@ const mat=new THREE.PointsMaterial({
   map:heartTex,
   transparent:true,
   depthWrite:false,
-  opacity:0.45 // MỜ ĐI
+  opacity:0.45
 });
+scene.add(new THREE.Points(geo,mat));
+const bgm=document.getElementById("bgm");
+let targetVolume=0.5;
+let currentVolume=0;
+setTimeout(()=>{
+  bgm.muted=false;
+  bgm.volume=0;
+  bgm.play().catch(()=>{});
+},1200);
 
-const fallingHearts=new THREE.Points(geo,mat);
-scene.add(fallingHearts);
-
-/* ================= MUSIC ================= */
-let started=false;
-let sound;
-
-function initMusic(){
-  if(started) return;
-  started=true;
-
-  const listener=new THREE.AudioListener();
-  camera.add(listener);
-  sound=new THREE.Audio(listener);
-
-  new THREE.AudioLoader().load(
-    "https://files.catbox.moe/39ugmx.mp3",
-    b=>{
-      sound.setBuffer(b);
-      sound.setVolume(0.5);
-
-      // Desktop: auto sau 1s
-      setTimeout(()=>{
-        try{ sound.play(); }catch(e){}
-      },1000);
-    }
-  );
+function fadeIn(){
+  currentVolume=Math.min(targetVolume,currentVolume+0.005);
+  bgm.volume=currentVolume;
 }
 
-// Chuẩn bị sẵn
-initMusic();
+function fadeOut(){
+  currentVolume=Math.max(0.15,currentVolume-0.01);
+  bgm.volume=currentVolume;
+}
 
-// Mobile: chạm là phát
-window.addEventListener("pointerdown",()=>{
-  if(sound && !sound.isPlaying){
-    try{ sound.play(); }catch(e){}
-  }
-},{once:true});
+["pointerdown","touchstart","keydown","wheel"].forEach(e=>{
+  window.addEventListener(e,()=>{
+    bgm.muted=false;
+    bgm.play().catch(()=>{});
+  },{once:true});
+});
 
-/* ================= FALLING TEXT + EMOJI (NHIỀU) ================= */
+document.addEventListener("visibilitychange",()=>{
+  if(document.hidden) fadeOut();
+});
+
+/* ================= FALLING TEXT + EMOJI ================= */
 const layer=document.getElementById("fall-layer");
 
 const texts=[
   "love thu trang",
   "vũ thu trang",
-  "05 · 03 · 2011"
+  "05 · 03 · 2011",
+  "trvu",
+  "I Love You",
+  "I Miss You",
+  "11 · 10 · 2025",
+  "nerver ending",
+  "Now and forever?...",
 ];
-
-const emojis=["💕","💖","🌸","💞","✨"];
+  
+const emojis=["💕","💖","🌸","💞","✨","💘","💘","❤️‍🔥","💞","💝"];
 
 function spawnFall(){
   const el=document.createElement("div");
   el.className="fall";
 
   if(Math.random()<0.25){
-    // TEXT (ÍT HƠN EMOJI)
     el.textContent=texts[Math.floor(Math.random()*texts.length)];
     el.classList.add("text");
     el.style.fontSize=(14+Math.random()*12)+"px";
   }else{
-    // EMOJI (NHIỀU)
     el.textContent=emojis[Math.floor(Math.random()*emojis.length)];
     el.style.fontSize=(16+Math.random()*18)+"px";
   }
 
   el.style.left=Math.random()*100+"%";
   el.style.animationDuration=(7+Math.random()*7)+"s";
-
   layer.appendChild(el);
   setTimeout(()=>el.remove(),16000);
 }
 
-// RƠI DÀY
 setInterval(spawnFall,180);
-
-/* ================= LOOP ================= */
 function animate(){
-  if(heartModel) heartModel.rotation.y+=0.003;
+  if(heartModel){
+    heartModel.rotation.y+=0.003;
+    fadeIn();
+    const pulse=1+Math.sin(performance.now()*0.006)*0.02;
+    heartModel.scale.set(
+      baseScale*pulse,
+      baseScale*pulse,
+      baseScale*pulse
+    );
+  }
 
   const a=geo.attributes.position.array;
   for(let i=0;i<count;i++){
