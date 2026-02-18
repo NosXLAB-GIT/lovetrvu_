@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Love Galaxy: Vu Thu Trang 💖</title>
+<style>
+    /* --- CẤU HÌNH CHUNG --- */
+    body {
+        margin: 0;
+        overflow: hidden;
+        background: radial-gradient(circle at center, #1a0b2e 0%, #000000 100%);
+        font-family: 'Courier New', monospace;
+        height: 100vh;
+        perspective: 1000px;
+        color: white;
+        touch-action: none;
+    }
+
+    /* --- SAO RƠI --- */
+    .star {
+        position: absolute;
+        top: -10px;
+        color: rgba(255, 255, 255, 0.8);
+        z-index: 1; 
+        animation: fall linear infinite;
+    }
+    @keyframes fall { to { transform: translateY(110vh); opacity: 0; } }
+
+    /* --- ICON BAY --- */
+    .fly {
+        position: absolute;
+        font-size: 30px;
+        pointer-events: none;
+        filter: drop-shadow(0 0 10px orange);
+        z-index: 20;
+        animation: flyRandom linear forwards;
+    }
+    @keyframes flyRandom {
+        from { transform: translate(var(--sx), var(--sy)) rotate(var(--rot)); }
+        to { transform: translate(var(--ex), var(--ey)) rotate(var(--rot)); }
+    }
+
+    /* --- TRÁI TIM TRUNG TÂM --- */
+    .core-heart {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 80px;
+        filter: drop-shadow(0 0 30px #ff0055);
+        animation: heartbeat 1.5s ease-in-out infinite;
+        z-index: 15;
+        cursor: pointer;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        transition: transform 0.2s;
+    }
+    @keyframes heartbeat {
+        0% { transform: translate(-50%, -50%) scale(1); }
+        15% { transform: translate(-50%, -50%) scale(1.3); }
+        30% { transform: translate(-50%, -50%) scale(1); }
+        45% { transform: translate(-50%, -50%) scale(1.15); }
+        60% { transform: translate(-50%, -50%) scale(1); }
+    }
+
+    /* --- VŨ TRỤ CHỮ --- */
+    .orbit-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        transform-style: preserve-3d;
+        animation: rotateGalaxy 45s linear infinite;
+        z-index: 10;
+    }
+
+    .love-text {
+        position: absolute;
+        white-space: nowrap;
+        font-weight: bold;
+        transform-origin: center;
+        opacity: 0.9;
+        backface-visibility: visible;
+        transition: transform 0.1s linear; 
+        will-change: transform;
+    }
+
+    @keyframes rotateGalaxy {
+        from { transform: rotateY(0deg) rotateX(10deg); }
+        to { transform: rotateY(360deg) rotateX(10deg); }
+    }
+
+    /* --- COPYRIGHT FOOTER (MỚI) --- */
+    .copyright {
+        position: fixed;
+        bottom: 5px;
+        width: 100%;
+        text-align: center;
+        font-size: 10px;
+        color: rgba(255, 255, 255, 0.3);
+        z-index: 200;
+        pointer-events: none;
+        font-family: sans-serif;
+    }
+
+    /* --- UI MOBILE --- */
+    #mobile-controls {
+        display: none;
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        max-width: 300px;
+        z-index: 100;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.15);
+        padding: 10px 20px;
+        border-radius: 30px;
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .slider-label { display: block; color: cyan; font-size: 12px; margin-bottom: 5px; text-shadow: 0 0 5px cyan; }
+    input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
+    input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%;
+        background: #ff69b4; cursor: pointer; margin-top: -7px; box-shadow: 0 0 10px #ff69b4;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+        width: 100%; height: 4px; cursor: pointer; background: rgba(255,255,255,0.3); border-radius: 2px;
+    }
+
+    /* --- CSS RIÊNG CHO MOBILE --- */
+    @media (max-width: 768px) {
+        .core-heart { font-size: 55px; filter: drop-shadow(0 0 15px #ff0055); }
+        .fly { font-size: 22px; }
+        .love-text { 
+            font-size: 10px !important; 
+            text-shadow: none !important; /* Fix lag */
+        }
+        #mobile-controls { display: block !important; }
+        #pc-hint { display: none !important; }
+        .copyright { bottom: 2px; font-size: 9px; } /* Footer nhỏ hơn chút trên đt */
+    }
+
+    /* --- HIỆU ỨNG PHỤ --- */
+    .trail {
+        position: absolute; width: 4px; height: 4px; background: cyan; border-radius: 50%;
+        pointer-events: none; animation: fadeOut 0.5s forwards; z-index: 100;
+    }
+    @keyframes fadeOut { to { opacity: 0; transform: scale(1.5); } }
+
+    .burst-heart {
+        position: absolute; font-size: 20px; pointer-events: none; animation: burst 1s ease-out forwards; z-index: 100;
+    }
+    @keyframes burst { to { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; } }
+    
+    #pc-hint {
+        position: absolute; bottom: 20px; width: 100%; text-align: center;
+        color: rgba(255,255,255,0.3); font-size: 12px; pointer-events: none;
+    }
+</style>
+</head>
+<body>
+
+    <div class="core-heart" onclick="boom()">💗</div>
+    <div class="orbit-container" id="galaxy"></div>
+
+    <div id="pc-hint">🖱️ Scroll to Zoom | Move mouse for magic 🖱️</div>
+
+    <div id="mobile-controls">
+        <span class="slider-label">✨ Zoom Galaxy ✨</span>
+        <input type="range" id="zoomSlider" min="0.4" max="2.2" step="0.01" value="1.0">
+    </div>
+
+    <div class="copyright">© NosXLAB <span id="year"></span></div>
+
+<script>
+    /* --- AUTO UPDATE YEAR --- */
+    document.getElementById("year").innerText = new Date().getFullYear();
+
+    /* ================= 1. SAO RƠI ================= */
+    function createStar(){
+        const s=document.createElement("div");
+        s.className="star";
+        s.innerText=["★","✦",".","•","*","°"][Math.floor(Math.random()*6)];
+        s.style.left=Math.random()*100+"vw";
+        s.style.fontSize=(Math.random()*(window.innerWidth<768?5:8)+4)+"px";
+        const d=Math.random()*5+3;
+        s.style.animationDuration=d+"s";
+        document.body.appendChild(s);
+        setTimeout(()=>s.remove(),d*1000);
+    }
+    setInterval(createStar, 120); 
+
+    /* ================= 2. VẬT THỂ BAY ================= */
+    const icons=["🚀","🛸","☄️","🌠","🚁", "🛰️", "💌", "🕊️"];
+    function spawnFly(){
+        const f=document.createElement("div");
+        f.className="fly";
+        f.innerText=icons[Math.floor(Math.random()*icons.length)];
+        const side=Math.floor(Math.random()*4);
+        let sx,sy,ex,ey,rot;
+
+        if(side===0){ sx="-10vw"; sy=Math.random()*100+"vh"; ex="110vw"; ey=Math.random()*100+"vh"; rot="20deg"; }
+        if(side===1){ sx="110vw"; sy=Math.random()*100+"vh"; ex="-10vw"; ey=Math.random()*100+"vh"; rot="-160deg"; }
+        if(side===2){ sx=Math.random()*100+"vw"; sy="110vh"; ex=Math.random()*100+"vw"; ey="-10vh"; rot="-70deg"; }
+        if(side===3){ sx=Math.random()*100+"vw"; sy="-10vh"; ex=Math.random()*100+"vw"; ey="110vh"; rot="110deg"; }
+
+        f.style.setProperty("--sx",sx);
+        f.style.setProperty("--sy",sy);
+        f.style.setProperty("--ex",ex);
+        f.style.setProperty("--ey",ey);
+        f.style.setProperty("--rot",rot);
+
+        const t=7+Math.random()*8;
+        f.style.animationDuration=t+"s";
+        document.body.appendChild(f);
+        setTimeout(()=>f.remove(),t*1000);
+    }
+    setInterval(spawnFly, 2500);
+
+    /* ================= 3. VŨ TRỤ CHỮ ================= */
+    const galaxy = document.getElementById("galaxy");
+    const words = [
+        "Vu Thu Trang", "TrVu", "Thu Trang", 
+        "05/03/2011", "11/10/2025",
+        "I want you, only you", "I Miss You", "I Love You",
+        "Pretty", "Beautiful", "Cute", "My World", "My Love",
+        "Forever", "Bé Yêu", "Cục Cưng", 
+        "💗", "✨", "💕", "🌹"
+    ];
+
+    const isMobile = window.innerWidth < 768;
+
+    const config = {
+        count: isMobile ? 70 : 120, 
+        radiusBase: isMobile ? 70 : 200, 
+        radiusVar: isMobile ? 120 : 300,
+        ySpread: isMobile ? 450 : 800,
+        fontMin: isMobile ? 9 : 12,
+        fontMax: isMobile ? 14 : 22
+    };
+
+    let particles = [];
+    let currentRadiusMultiplier = 1.0; 
+
+    for (let i = 0; i < config.count; i++) {
+        let el = document.createElement("div");
+        el.className = "love-text";
+        el.innerText = words[i % words.length];
+
+        let angle = Math.random() * Math.PI * 2;
+        let r = config.radiusBase + Math.random() * config.radiusVar; 
+        let y = (Math.random() - 0.5) * config.ySpread;
+        
+        let fontSize = config.fontMin + Math.random() * (config.fontMax - config.fontMin);
+        el.style.fontSize = fontSize + "px";
+
+        let colors = ["#ff69b4", "#00ffff", "#ff0055", "#ccff00", "#ffffff", "#ff99cc"];
+        el.style.color = colors[Math.floor(Math.random() * colors.length)];
+        
+        if (!isMobile) {
+            el.style.textShadow = `0 0 8px ${el.style.color}`;
+        }
+
+        particles.push({ element: el, angle: angle, radius: r, y: y });
+        galaxy.appendChild(el);
+    }
+
+    function updateGalaxyLayout() {
+        particles.forEach(p => {
+            let newRadius = p.radius * currentRadiusMultiplier;
+            let newY = p.y * currentRadiusMultiplier;
+            p.element.style.transform = `translate3d(0,0,0) rotateY(${p.angle}rad) translateZ(${newRadius}px) translateY(${newY}px)`;
+        });
+    }
+    updateGalaxyLayout(); 
+
+    /* --- ĐIỀU KHIỂN --- */
+    document.addEventListener('wheel', (event) => {
+        if(isMobile) return; 
+        if (event.deltaY > 0) currentRadiusMultiplier += 0.1;
+        else currentRadiusMultiplier -= 0.1;
+        if (currentRadiusMultiplier < 0.2) currentRadiusMultiplier = 0.2;
+        if (currentRadiusMultiplier > 3.0) currentRadiusMultiplier = 3.0;
+        updateGalaxyLayout();
+    });
+
+    const slider = document.getElementById('zoomSlider');
+    slider.addEventListener('input', (e) => {
+        currentRadiusMultiplier = parseFloat(e.target.value);
+        updateGalaxyLayout();
+    });
+
+    /* ================= 4. HIỆU ỨNG TOUCH & CLICK ================= */
+    let lastTime = 0;
+    
+    function createTrail(x, y) {
+        const now = Date.now();
+        if (now - lastTime < 50) return; 
+        lastTime = now;
+
+        let t = document.createElement("div");
+        t.className = "trail";
+        t.style.left = x + "px";
+        t.style.top = y + "px";
+        let hue = (x / window.innerWidth) * 360;
+        t.style.background = `hsl(${hue}, 100%, 50%)`;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 500); 
+    }
+
+    document.addEventListener("mousemove", (e) => createTrail(e.clientX, e.clientY));
+    document.addEventListener("touchmove", (e) => {
+        let touch = e.touches[0];
+        createTrail(touch.clientX, touch.clientY);
+    });
+
+    function boom() {
+        const center = document.querySelector('.core-heart');
+        center.style.transform = "translate(-50%, -50%) scale(1.4)";
+        setTimeout(() => center.style.transform = "translate(-50%, -50%) scale(1)", 200);
+
+        let count = isMobile ? 15 : 40; 
+        for (let i = 0; i < count; i++) {
+            let b = document.createElement("div");
+            b.className = "burst-heart";
+            b.innerText = "💗";
+            b.style.left = "50%";
+            b.style.top = "50%";
+            let angle = Math.random() * Math.PI * 2;
+            let dist = 100 + Math.random() * 200;
+            let dx = Math.cos(angle) * dist + "px";
+            let dy = Math.sin(angle) * dist + "px";
+            b.style.setProperty("--dx", dx);
+            b.style.setProperty("--dy", dy);
+            document.body.appendChild(b);
+            setTimeout(() => b.remove(), 1000);
+        }
+    }
+</script>
+
+</body>
+</html>
