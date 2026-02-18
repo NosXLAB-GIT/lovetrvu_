@@ -2,66 +2,191 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>lovetrvu_</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>lovetrvu_ Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-body{
-  margin:0;
-  min-height:100vh;
-  background:linear-gradient(180deg,#060006,#0a0208);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-family:"Segoe UI",sans-serif;
-  color:#ffd6e6;
-}
-.box{
-  text-align:center;
-  max-width:420px;
-  padding:20px;
-}
-h1{
-  letter-spacing:.2em;
-  margin-bottom:20px;
-}
-a{
-  display:block;
-  margin:12px 0;
-  padding:12px 20px;
-  border-radius:12px;
-  text-decoration:none;
-  color:#fff;
-  background:rgba(255,120,160,.15);
-  backdrop-filter:blur(6px);
-  transition:.3s;
-}
-a:hover{
-  background:rgba(255,120,160,.35);
-  transform:translateY(-2px);
-}
-small{
-  opacity:.6;
-  display:block;
-  margin-top:18px;
-  line-height:1.6;
-}
+    /* --- CẤU HÌNH CHUNG --- */
+    * { box-sizing: border-box; }
+    body {
+        margin: 0;
+        min-height: 100vh;
+        /* Background Gradient động */
+        background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #1a0b2e);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Quicksand', sans-serif;
+        color: white;
+        overflow-y: auto; /* Cho phép cuộn nếu danh sách dài */
+    }
+
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* --- HẠT BỤI NỀN (Hiệu ứng phụ) --- */
+    .bg-circle {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        z-index: 0;
+        opacity: 0.4;
+    }
+    .c1 { width: 300px; height: 300px; background: #ff0055; top: -50px; left: -50px; animation: float 6s infinite alternate; }
+    .c2 { width: 400px; height: 400px; background: #00ffff; bottom: -100px; right: -100px; animation: float 8s infinite alternate-reverse; }
+
+    @keyframes float { to { transform: translateY(30px); } }
+
+    /* --- HỘP CHỨA NỘI DUNG (GLASSMORPHISM) --- */
+    .box {
+        position: relative;
+        z-index: 10;
+        text-align: center;
+        width: 100%;
+        max-width: 400px;
+        padding: 40px 30px;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px); /* Hiệu ứng kính mờ */
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        margin: 20px;
+    }
+
+    /* --- TIÊU ĐỀ --- */
+    h1 {
+        margin: 0 0 10px 0;
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        background: linear-gradient(to right, #ff69b4, #00ffff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
+    }
+    
+    .subtitle {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 30px;
+        font-style: italic;
+    }
+
+    /* --- DANH SÁCH LINK --- */
+    .link-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    a {
+        display: flex;
+        align-items: center;
+        justify-content: space-between; /* Icon bên trái, mũi tên bên phải */
+        padding: 15px 20px;
+        text-decoration: none;
+        color: white;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        font-weight: 600;
+    }
+
+    /* Hiệu ứng khi di chuột vào Link */
+    a:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    a span.icon { margin-right: 10px; font-size: 20px; }
+    a span.arrow { opacity: 0; transform: translateX(-10px); transition: 0.3s; color: #ff69b4; }
+    
+    a:hover span.arrow { opacity: 1; transform: translateX(0); }
+
+    /* --- FOOTER --- */
+    .footer {
+        margin-top: 40px;
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.3);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 20px;
+        line-height: 1.6;
+    }
 </style>
 </head>
 
 <body>
-  <div class="box">
-    <h1>lovetrvu_</h1>
 
-    <a href="lathudautien.html">💌 Lá thư đầu tiên</a>
-    <a href="heart_171225.html">❤️ Heart 17.12.25</a>
-    <a href="memory.html">🕰️ Ký ức</a>
-    <a href="loicam_on.html">🌷 Lời cảm ơn</a>
-    <a href="200%25.html">✨ 200%</a>
+    <div class="bg-circle c1"></div>
+    <div class="bg-circle c2"></div>
 
-    <small>
-      not a product<br>
-      just a feeling
-    </small>
-  </div>
+    <div class="box">
+        <h1>lovetrvu_</h1>
+        <div class="subtitle">Just a feeling, not a product.</div>
+
+        <div class="link-list">
+            <a href="galaxy.html">
+                <span>🌌 Vũ trụ tình yêu (New)</span> <span class="arrow">➜</span>
+            </a>
+
+            <a href="lathudautien.html">
+                <span>💌 Lá thư đầu tiên</span> <span class="arrow">➜</span>
+            </a>
+
+            <a href="heart_171225.html">
+                <span>❤️ Heart 17.12.25</span> <span class="arrow">➜</span>
+            </a>
+
+            <a href="memory.html">
+                <span>🕰️ Ký ức</span> <span class="arrow">➜</span>
+            </a>
+
+            <a href="loicam_on.html">
+                <span>🌷 Lời cảm ơn</span> <span class="arrow">➜</span>
+            </a>
+
+            <a href="200%25.html">
+                <span>✨ 200%</span> <span class="arrow">➜</span>
+            </a>
+        </div>
+
+        <div class="footer">
+            Made with ❤️ for Trang<br>
+            <span id="copyright"></span>
+        </div>
+    </div>
+
+<script>
+    // --- AUTO UPDATE NĂM ---
+    const year = new Date().getFullYear();
+    document.getElementById("copyright").innerText = "© NosXLAB " + year;
+
+    // --- HIỆU ỨNG VÀO TRANG (Fade In) ---
+    document.addEventListener("DOMContentLoaded", () => {
+        const links = document.querySelectorAll("a");
+        links.forEach((link, index) => {
+            link.style.opacity = "0";
+            link.style.animation = `fadeInUp 0.5s ease forwards ${index * 0.1}s`;
+        });
+    });
+</script>
+
+<style>
+    /* Animation xuất hiện lần lượt */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
 </body>
 </html>
