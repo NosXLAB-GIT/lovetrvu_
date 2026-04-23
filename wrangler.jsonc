@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
 
-  "name": "05032011",
+  "name": "lovetrvu",
   "compatibility_date": "2026-04-23",
 
   "assets": {
