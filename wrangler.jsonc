@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+
+  "name": "05032011", 
+  "compatibility_date": "2026-04-23",
+
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  },
+
+  "observability": {
+    "enabled": true
+  },
+
+  "compatibility_flags": [
+    "nodejs_compat"
+  ]
+}
