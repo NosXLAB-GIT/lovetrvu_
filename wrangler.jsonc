@@ -2,8 +2,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "lovetrvu",
   "compatibility_date": "2026-04-23",
-  "assets": {
-    "directory": "./dist" 
+  "assets": { "directory": "./web-assets" }
   },
   "observability": {
     "enabled": true
